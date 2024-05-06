@@ -1,8 +1,6 @@
 package jwt
 
 import (
-	"fmt"
-
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/ndsky1003/jwt/options"
 )
@@ -52,7 +50,6 @@ func New[T any](v T, opts ...*options.NewOptions) (string, error) {
 		vv.ID = *opt.ID
 	}
 
-	fmt.Printf("%+v\n", vv)
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, vv).SignedString(key)
 }
 
@@ -71,10 +68,8 @@ func Parse[T any](tokenStr string, opts ...*options.NewOptions) (*CustomClaims[T
 	_, err := jwt.ParseWithClaims(tokenStr, v, func(token *jwt.Token) (interface{}, error) {
 		return key, nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return v, nil
+
+	return v, err //有些时候错误也是要其内容,比如过期,也可以自动续签
 }
 
 type CustomClaims[T any] struct {

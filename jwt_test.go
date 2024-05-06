@@ -18,14 +18,14 @@ func Test_New(t *testing.T) {
 		"张三",
 		18,
 	}
-	ss, err := New[Person](
+	ss, err := New(
 		p,
 		options.New().
 			SetIssuer("李四").
 			SetSubject("sub").
 			SetAudience(&jwt.ClaimStrings{"aa", "bb"}).
 			SetID("12341234").
-			SetExpiresAt(jwt.NewNumericDate(time.Now().Add(100*time.Second))).
+			SetExpiresAt(jwt.NewNumericDate(time.Now().Add(-100*time.Second))).
 			SetNotBefore(jwt.NewNumericDate(time.Now().Add(-1*time.Second))).
 			SetIssuedAt(jwt.NewNumericDate(time.Now().Add(1000*time.Second))),
 	)

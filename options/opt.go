@@ -1,6 +1,10 @@
 package options
 
-import "github.com/golang-jwt/jwt/v5"
+import (
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+)
 
 type NewOptions struct {
 	Secret    *string
@@ -41,35 +45,39 @@ func (this *NewOptions) SetSubject(s string) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetAudience(s *jwt.ClaimStrings) *NewOptions {
+func (this *NewOptions) SetAudience(s ...string) *NewOptions {
 	if this == nil {
 		return this
 	}
-	this.Audience = s
+	var a = make(jwt.ClaimStrings, 0, len(s))
+	for _, v := range s {
+		a = append(a, v)
+	}
+	this.Audience = &a
 	return this
 }
 
-func (this *NewOptions) SetExpiresAt(s *jwt.NumericDate) *NewOptions {
+func (this *NewOptions) SetExpiresAt(t time.Time) *NewOptions {
 	if this == nil {
 		return this
 	}
-	this.ExpiresAt = s
+	this.ExpiresAt = jwt.NewNumericDate(t)
 	return this
 }
 
-func (this *NewOptions) SetNotBefore(s *jwt.NumericDate) *NewOptions {
+func (this *NewOptions) SetNotBefore(t time.Time) *NewOptions {
 	if this == nil {
 		return this
 	}
-	this.NotBefore = s
+	this.NotBefore = jwt.NewNumericDate(t)
 	return this
 }
 
-func (this *NewOptions) SetIssuedAt(s *jwt.NumericDate) *NewOptions {
+func (this *NewOptions) SetIssuedAt(t time.Time) *NewOptions {
 	if this == nil {
 		return this
 	}
-	this.IssuedAt = s
+	this.IssuedAt = jwt.NewNumericDate(t)
 	return this
 }
 

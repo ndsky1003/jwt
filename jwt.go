@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/ndsky1003/jwt/options"
 )
 
 var mySigningKey = []byte("b1561c9fc5db1a321206bb821c3a8bc2")
@@ -11,8 +10,8 @@ func SetKey(key []byte) {
 	mySigningKey = key
 }
 
-func New[T any](v T, opts ...*options.NewOptions) (string, error) {
-	opt := options.New().Merge(opts...)
+func New[T any](v T, opts ...*option) (string, error) {
+	opt := Option().Merge(opts...)
 	var key []byte
 	if opt.Secret != nil {
 		key = []byte(*opt.Secret)
@@ -20,7 +19,7 @@ func New[T any](v T, opts ...*options.NewOptions) (string, error) {
 		key = mySigningKey
 	}
 	vv := &CustomClaims[T]{
-		Payload: v,
+		P: v,
 	}
 	if opt.Issuer != nil {
 		vv.Issuer = *opt.Issuer
@@ -53,8 +52,9 @@ func New[T any](v T, opts ...*options.NewOptions) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, vv).SignedString(key)
 }
 
-func Parse[T any](tokenStr string, opts ...*options.NewOptions) (*CustomClaims[T], error) {
-	opt := options.New().Merge(opts...)
+// 就算有错,令牌过期这些逻辑错误,都会返回这个token所承载的内容
+func Parse[T any](token string, opts ...*option) (*CustomClaims[T], error) {
+	opt := Option().Merge(opts...)
 	var key []byte
 	if opt.Secret != nil {
 		key = []byte(*opt.Secret)
@@ -63,9 +63,9 @@ func Parse[T any](tokenStr string, opts ...*options.NewOptions) (*CustomClaims[T
 	}
 	var payload T
 	v := &CustomClaims[T]{
-		Payload: payload,
+		P: payload,
 	}
-	_, err := jwt.ParseWithClaims(tokenStr, v, func(token *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(token, v, func(token *jwt.Token) (interface{}, error) {
 		return key, nil
 	})
 
@@ -73,6 +73,6 @@ func Parse[T any](tokenStr string, opts ...*options.NewOptions) (*CustomClaims[T
 }
 
 type CustomClaims[T any] struct {
-	Payload T
+	P T
 	jwt.RegisteredClaims
 }

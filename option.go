@@ -1,4 +1,4 @@
-package options
+package jwt
 
 import (
 	"time"
@@ -6,7 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type NewOptions struct {
+type option struct {
 	Secret    *string
 	Issuer    *string
 	Subject   *string
@@ -17,11 +17,11 @@ type NewOptions struct {
 	ID        *string
 }
 
-func New() *NewOptions {
-	return new(NewOptions)
+func Option() *option {
+	return new(option)
 }
 
-func (this *NewOptions) SetSecret(s string) *NewOptions {
+func (this *option) SetSecret(s string) *option {
 	if this == nil {
 		return this
 	}
@@ -29,7 +29,7 @@ func (this *NewOptions) SetSecret(s string) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetIssuer(s string) *NewOptions {
+func (this *option) SetIssuer(s string) *option {
 	if this == nil {
 		return this
 	}
@@ -37,7 +37,7 @@ func (this *NewOptions) SetIssuer(s string) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetSubject(s string) *NewOptions {
+func (this *option) SetSubject(s string) *option {
 	if this == nil {
 		return this
 	}
@@ -45,7 +45,7 @@ func (this *NewOptions) SetSubject(s string) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetAudience(s ...string) *NewOptions {
+func (this *option) SetAudience(s ...string) *option {
 	if this == nil {
 		return this
 	}
@@ -57,7 +57,7 @@ func (this *NewOptions) SetAudience(s ...string) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetExpiresAt(t time.Time) *NewOptions {
+func (this *option) SetExpiresAt(t time.Time) *option {
 	if this == nil {
 		return this
 	}
@@ -65,7 +65,7 @@ func (this *NewOptions) SetExpiresAt(t time.Time) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetNotBefore(t time.Time) *NewOptions {
+func (this *option) SetNotBefore(t time.Time) *option {
 	if this == nil {
 		return this
 	}
@@ -73,7 +73,7 @@ func (this *NewOptions) SetNotBefore(t time.Time) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetIssuedAt(t time.Time) *NewOptions {
+func (this *option) SetIssuedAt(t time.Time) *option {
 	if this == nil {
 		return this
 	}
@@ -81,7 +81,7 @@ func (this *NewOptions) SetIssuedAt(t time.Time) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) SetID(v string) *NewOptions {
+func (this *option) SetID(v string) *option {
 	if this == nil {
 		return this
 	}
@@ -89,14 +89,14 @@ func (this *NewOptions) SetID(v string) *NewOptions {
 	return this
 }
 
-func (this *NewOptions) Merge(opts ...*NewOptions) *NewOptions {
+func (this *option) Merge(opts ...*option) *option {
 	for _, opt := range opts {
 		this.merge(opt)
 	}
 	return this
 }
 
-func (this *NewOptions) merge(opt *NewOptions) {
+func (this *option) merge(opt *option) {
 	if opt.Secret != nil {
 		this.Secret = opt.Secret
 	}
@@ -127,35 +127,5 @@ func (this *NewOptions) merge(opt *NewOptions) {
 
 	if opt.ID != nil {
 		this.ID = opt.ID
-	}
-}
-
-// ------------------ParseOption------------------
-type ParseOption struct {
-	Secret *string
-}
-
-func Parse() *ParseOption {
-	return new(ParseOption)
-}
-
-func (this *ParseOption) SetSecret(s string) *ParseOption {
-	if this == nil {
-		return this
-	}
-	this.Secret = &s
-	return this
-}
-
-func (this *ParseOption) Merge(opts ...*ParseOption) *ParseOption {
-	for _, opt := range opts {
-		this.merge(opt)
-	}
-	return this
-}
-
-func (this *ParseOption) merge(opt *ParseOption) {
-	if opt.Secret != nil {
-		this.Secret = opt.Secret
 	}
 }

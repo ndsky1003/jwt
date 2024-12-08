@@ -10,8 +10,8 @@ func SetKey(key []byte) {
 	mySigningKey = key
 }
 
-func New[T any](v T, opts ...*option) (string, error) {
-	opt := Option().Merge(opts...)
+func New[T any](v T, opts ...*Option) (string, error) {
+	opt := Options().Merge(opts...)
 	var key []byte
 	if opt.Secret != nil {
 		key = []byte(*opt.Secret)
@@ -53,8 +53,8 @@ func New[T any](v T, opts ...*option) (string, error) {
 }
 
 // 就算有错,令牌过期这些逻辑错误,都会返回这个token所承载的内容
-func Parse[T any](token string, opts ...*option) (*CustomClaims[T], error) {
-	opt := Option().Merge(opts...)
+func Parse[T any](token string, opts ...*Option) (*CustomClaims[T], error) {
+	opt := Options().Merge(opts...)
 	var key []byte
 	if opt.Secret != nil {
 		key = []byte(*opt.Secret)

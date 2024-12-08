@@ -18,7 +18,7 @@ func Test_New(t *testing.T) {
 	}
 	ss, err := New(
 		p,
-		Option().
+		Options().
 			SetExpiresAt(time.Now().Add(-100*time.Second)).
 			SetNotBefore(time.Now().Add(-1*time.Second)).
 			SetIssuedAt(time.Now().Add(1000*time.Second)),
